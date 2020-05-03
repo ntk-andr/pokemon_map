@@ -33,7 +33,8 @@ def delete_db():
 def create_superuser():
     """Создаем суперюзера."""
     os.system('python manage.py migrate')
-    os.system('python manage.py createsuperuser --username nordkot --email ""')
+    print('createsuperuser')
+    os.system('python manage.py createsuperuser --email ""')
 
 
 def create_migraions():
@@ -52,7 +53,7 @@ def create_img_for_pokemons():
             with open(filepath, 'rb') as file:
                 data = File(file)
                 filename = f'pokemon_{pokemon_id}.png'
-                pokemon.image.save(filename, data)
+                pokemon.image.save(filename, data, False)
             pokemon.save()
         except Exception as e:
             print(e)
@@ -71,7 +72,13 @@ def create_pokemons():
 
 
 def create_evolutions():
-    pass
+    """Создание эволюций покемонов."""
+    for pokemon in pokemons:
+        pokemon_id = pokemon['pokemon_id']
+        pokemon_item = Pokemon.objects.get(id=pokemon_id)
+        if 'previous_evolution' in pokemon:
+            pokemon_item.previous_evolution_id = pokemon['previous_evolution']['pokemon_id']
+            pokemon_item.save()
 
 
 def create_pokemons_entities():
@@ -97,7 +104,7 @@ def create_pokemons_entities():
 if __name__ == "__main__":
     pokemons = get_pokemons()
     delete_db()
-    # create_superuser()
+    create_superuser()
     create_migraions()
     create_pokemons()
     create_evolutions()
