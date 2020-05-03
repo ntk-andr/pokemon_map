@@ -9,12 +9,12 @@ class Pokemon(models.Model):
     description = models.CharField(max_length=200)
     image = models.ImageField(null=True, blank=True)
 
-    # previous_evolution = models.ForeignKey(
-    #     'self',
-    #     on_delete=models.SET_NULL,
-    #     null=True, blank=True,
-    #     related_name='next_evolution'
-    # )
+    previous_evolution = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        # related_name='next_evolution'
+    )
 
     def __str__(self):
         return self.title
