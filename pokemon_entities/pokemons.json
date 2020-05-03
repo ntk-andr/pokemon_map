@@ -63,7 +63,7 @@
         "img_url": "https://vignette.wikia.nocookie.net/pokemon/images/a/ae/003Venusaur.png/revision/latest/scale-to-width-down/200?cb=20150703175822&path-prefix=ru",
         "entities": [
             {
-                "lvl": 44,
+                "level": 44,
                 "lat": 55.795179,
                 "lon": 37.697149
             }
