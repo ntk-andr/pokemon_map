@@ -67,9 +67,9 @@ def show_pokemon(request, pokemon_id):
 
         if previous_evolution:
             pokemon_on_page['previous_evolution'] = {
-                'pokemon_id': pokemon.previous_evolution.id,
-                'img_url': request.build_absolute_uri(pokemon.previous_evolution.image.url),
-                'title_ru': pokemon.previous_evolution.title_ru
+                'pokemon_id': previous_evolution.id,
+                'img_url': request.build_absolute_uri(previous_evolution.image.url),
+                'title_ru': previous_evolution.title_ru
             }
 
         if next_evolution:
