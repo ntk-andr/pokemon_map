@@ -91,3 +91,4 @@ media/
 
 .vscode/
 venv/
+.idea/
