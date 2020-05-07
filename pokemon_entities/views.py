@@ -1,6 +1,8 @@
 import folium
 import json
 
+from django.core.exceptions import ObjectDoesNotExist 
+
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 
@@ -50,36 +52,37 @@ def show_all_pokemons(request):
 def show_pokemon(request, pokemon_id):
     try:
         pokemon = Pokemon.objects.get(id=pokemon_id)
-        pokemon.img_url = request.build_absolute_uri(pokemon.image.url)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
 
-        pokemon_on_page = {
-            'pokemon_id': pokemon_id,
-            'img_url': pokemon.img_url,
-            'title_ru': pokemon.title_ru,
-            'title_en': pokemon.title_en,
-            'title_jp': pokemon.title_jp,
-            'description': pokemon.description,
-            'title': pokemon.title,
+    pokemon.img_url = request.build_absolute_uri(pokemon.image.url)
+
+    pokemon_on_page = {
+        'pokemon_id': pokemon_id,
+        'img_url': pokemon.img_url,
+        'title_ru': pokemon.title_ru,
+        'title_en': pokemon.title_en,
+        'title_jp': pokemon.title_jp,
+        'description': pokemon.description,
+        'title': pokemon.title,
+    }
+
+    next_evolution = pokemon.next.first()
+    previous_evolution = pokemon.previous_evolution
+
+    if previous_evolution:
+        pokemon_on_page['previous_evolution'] = {
+            'pokemon_id': previous_evolution.id,
+            'img_url': request.build_absolute_uri(previous_evolution.image.url),
+            'title_ru': previous_evolution.title_ru
         }
 
-        next_evolution = pokemon.next.first()
-        previous_evolution = pokemon.previous_evolution
-
-        if previous_evolution:
-            pokemon_on_page['previous_evolution'] = {
-                'pokemon_id': previous_evolution.id,
-                'img_url': request.build_absolute_uri(previous_evolution.image.url),
-                'title_ru': previous_evolution.title_ru
-            }
-
-        if next_evolution:
-            pokemon_on_page['next_evolution'] = {
-                'pokemon_id': pokemon.next.first().id,
-                'img_url': request.build_absolute_uri(pokemon.next.first().image.url),
-                'title_ru': pokemon.next.first().title_ru
-            }
-    except:
-        return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
+    if next_evolution:
+        pokemon_on_page['next_evolution'] = {
+            'pokemon_id': pokemon.next.first().id,
+            'img_url': request.build_absolute_uri(pokemon.next.first().image.url),
+            'title_ru': pokemon.next.first().title_ru
+        }
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
 
