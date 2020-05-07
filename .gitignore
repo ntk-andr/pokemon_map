@@ -92,3 +92,4 @@ media/
 .vscode/
 venv/
 .idea/
+pokemon_entities/pokemons.json
